@@ -1,0 +1,7 @@
+
+SRP=SRP00000
+
+wget -O $SRP"_info.csv" 'http://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?save=efetch&db=sra&rettype=runinfo&term='$SRP
+
+~/sratoolkit.2.10.8-ubuntu64/bin/fastq-dump --split-files  $(awk -F "," '{ print $1}' $SRP"_info.csv" |  tail -n+2 )
+
