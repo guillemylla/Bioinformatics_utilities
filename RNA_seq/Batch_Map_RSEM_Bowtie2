@@ -1,0 +1,19 @@
+indexname="/500gbdisk/genomes/Nlugens_RSEM"
+outputpath="."
+
+for  R1  in  $(ls *1_clean.fastq); do
+    printf "\n"
+    R2=`echo $R1 | sed 's/_1/_2/'`
+    fname=`echo $R1 | sed 's/.fastq//' |  sed 's/_1//' `
+    print $fname
+
+     rsem-calculate-expression --bowtie2 \
+          --bowtie2-path ~/bowtie2-2.4.2-linux-x86_64/ \
+          --paired-end $R1 $R2\
+            --num-threads 16 \
+               $indexname \
+               $fname
+
+    printf "\n"
+    echo  Done with $fname
+done
