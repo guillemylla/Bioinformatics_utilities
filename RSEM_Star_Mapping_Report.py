@@ -1,20 +1,23 @@
 import glob, os, sys
 
 # Guillem ylla January 2019
-## Creates a table with the numbers and percentages of mapped and unmapped reads per sample using RSEM log file
+## Creates a table with the numbers and percentages of mapped and unmapped reads per sample using RSEM log file from STAR
 
 ## Usage
-### RSEM_Mapping_Report.py  Rsem_output_directory/ 
-### Will generate the file "Mapping_Summary.txt" on the CWD 
+### RSEM_Star_Mapping_Report.py  Rsem_output_directory/ Outputfilename
 
-outfile = open("Mapping_Summary.txt","w") 
+
+outfilename = sys.argv[-1] # last argument
+outfile = open(outfilename,"w") 
+
+path = sys.argv[-2] # last argument
 
 
 
 outfile.write('\t'.join(["Sample","Reads","Mapped reads", "p mapped reads","Unmapped too short"]))
 outfile.write('\n')
 
-filename = sys.argv[-1] # last argument
+path = sys.argv[-1] # last argument
 
 files = []
 # r=root, d=directories, f = files

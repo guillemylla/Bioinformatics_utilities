@@ -1,11 +1,10 @@
 import glob, os, sys
 
 # Guillem ylla January 2019
-## Creates a table with the numbers and percentages of mapped and unmapped reads per sample using RSEM log file
+## Creates a table with the numbers and percentages of mapped and unmapped reads per sample using RSEM log file from Bowtie
 
 ## Usage
-### RSEM_Mapping_Report.py  Rsem_output_directory/ 
-### Will generate the file "Mapping_Summary.txt" on the CWD 
+### RSEM_Bowtie_Mapping_Report.py  Rsem_output_directory/ Outputfilename
 
 
 
