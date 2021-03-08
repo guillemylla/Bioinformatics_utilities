@@ -32,7 +32,7 @@ if response.status_code == 200:
 elif response.status_code == 404:
     print('Not Found.')
 
-
+f = open(pathcsv, "w")
 
 
 #response.json()
@@ -40,8 +40,9 @@ elif response.status_code == 404:
 jsonresponse=response.json()
 
 
-print("sppname", "taxid", "seq_length","estimated_size","submission_date","assembly_level")      
-
+line=["sppname", "taxid", "seq_length","estimated_size","submission_date","assembly_level"]
+f.write("\t".join(line))
+f.write("\n")
 
 for element1 in jsonresponse.items():
  if(element1[0]=="total_count"):
@@ -73,5 +74,9 @@ for element1 in jsonresponse.items():
      #   gff="no"
      # submissiondate=element3[1]
      # submissiondate=element3[1]
-    print(sppname, taxid, Seqlen,estimated,date,level)      
+    line=[sppname, taxid, Seqlen,estimated,date,level]
+    f.write("\t".join(line))
+    f.write("\n")
+f.close()
+
 
