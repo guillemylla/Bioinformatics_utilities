@@ -4,6 +4,14 @@ import requests
 import json
 from optparse import OptionParser
 import sys
+from Bio import Entrez
+Entrez.email = 'example@example.com'
+
+def get_taxonomyinfo(taxid):
+	handle = Entrez.efetch(db="Taxonomy", id=taxid, retmode="xml")
+	records = Entrez.read(handle)
+	return(records[0]["Lineage"])
+
 
 parser = OptionParser()
 parser.add_option( "-o","--fileout", dest="pathcsv", default="None", help="[Required] File where to save results'")
@@ -55,6 +63,8 @@ for element1 in jsonresponse.items():
      if (element3[0] == "org"):
       sppname=element3[1]['sci_name']
       taxid= element3[1]['tax_id']
+      taxonomyinfo=get_taxonomyinfo(taxid) ## get taxonomy info
+      taxonomyinfo_tab=str.replace(taxonomyinfo, "; ", "\t")
      if (element3[0] == "seq_length"):
       Seqlen=element3[1]
      if (element3[0] == 'submission_date'):
@@ -74,9 +84,12 @@ for element1 in jsonresponse.items():
      #   gff="no"
      # submissiondate=element3[1]
      # submissiondate=element3[1]
-    line=[sppname, taxid, Seqlen,estimated,date,level]
+    line=[sppname, taxid, Seqlen,estimated,date,level,taxonomyinfo_tab]
     f.write("\t".join(line))
     f.write("\n")
 f.close()
+
+
+
 
 
