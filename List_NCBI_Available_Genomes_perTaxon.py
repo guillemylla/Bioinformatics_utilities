@@ -2,8 +2,26 @@ import pandas as pd
 import os
 import requests
 import json
+from optparse import OptionParser
+import sys
 
-Querytaxon=85823#blattaria
+parser = OptionParser()
+parser.add_option( "-o","--fileout", dest="pathcsv", default="None", help="[Required] File where to save results'")
+parser.add_option( "-i","--taxon_id", dest="Querytaxon", default="None", help="[Required] NSBI Taxon ID to query '")
+
+
+(options, args) = parser.parse_args()
+
+pathcsv = options.pathcsv
+Querytaxon = options.Querytaxon
+
+if pathcsv == "None":
+    print("Missing inputs.\n -h for more information")
+    sys.exit(1)
+    
+
+print("Taxon to query:", Querytaxon)
+#Querytaxon=85823#blattaria
 baseURL = "https://api.ncbi.nlm.nih.gov/datasets/v1alpha/genome/taxon/"+ str(Querytaxon)
 
 
