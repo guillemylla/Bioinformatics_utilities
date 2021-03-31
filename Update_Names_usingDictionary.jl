@@ -131,7 +131,7 @@ end
 
 
 ####### Read and write
-function main_replaceKnowncolumn(filein, fileout, ColumnNr )
+function replaceKnowncolumn(filein, fileout, ColumnNr )
 	i=1
 	open(fileout, "w") do fileout
 		open(filein) do file
@@ -183,7 +183,7 @@ function main()
 		println("No FASTA file")
 		if !isnothing(parsed_args["ColumnNr"])
 			println("Column Known:" , Int8(parsed_args["ColumnNr"]))
-			main_replaceKnowncolumn(parsed_args["filetorename"], parsed_args["out"], Int8(parsed_args["ColumnNr"]))
+			replaceKnowncolumn(parsed_args["filetorename"], parsed_args["out"], Int8(parsed_args["ColumnNr"]))
 		else
 			println("Column Unknown!")
 			main_replace(parsed_args["filetorename"], parsed_args["out"] )
