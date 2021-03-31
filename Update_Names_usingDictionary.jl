@@ -31,6 +31,11 @@ function parse_commandline()
 	 	"--isFasta"
 			   help = "yes if it's a fasta file. Will make it faster."
 			   required = false
+	   "--ColumnNr"
+			  help = "If know, put column to replace, from tab separated file. Will make it faster."
+			  required = false
+			  arg_type = Int
+
 	     "--out","-o"
 	          help = "Output file"
 	          required = true
@@ -125,6 +130,40 @@ function main_inFasta(filein, fileout)
 end
 
 
+####### Read and write
+function replaceKnowncolumn(filein, fileout, ColumnNr )
+	i=1
+	open(fileout, "w") do fileout
+		open(filein) do file
+		    for line in eachline(file)
+				global newline=line
+				SPlitline=split(line,"\t", limit=ColumnNr+1)[ColumnNr]
+				println("Column item to look for replacement: ",SPlitline)
+				if occursin("Contig", SPlitline)
+					println("Found :: ",line)
+					for contig in keys(Names_dictionary)
+					      #println("Check contig ... ", contig )
+						  if occursin( contig*r"\b", newline)
+						  	newline=replacename(contig)
+							break# if replaced, stop trying. To make it faster
+						  end
+					end
+					println("New Name :: ",newline)
+					print("\n")
+				end
+				write(fileout, newline*"\n")
+				if i ==10000
+					 GC.gc()
+					 i=1
+				 end
+				#i=i	+1
+		    end
+		end
+	end
+	close(file)
+	close(fileout)
+end
+
 ####### MAIN
 function main()
     parsed_args = parse_commandline()
@@ -137,11 +176,18 @@ function main()
 		if lowercase(parsed_args["isFasta"]) == "yes"
 			println("FASTA file")
 			main_inFasta(parsed_args["filetorename"], parsed_args["out"])
-		else
-			main_replace(parsed_args["filetorename"], parsed_args["out"])
+#		else
+#			main_replace(parsed_args["filetorename"], parsed_args["out"])
 		end
 	else
-		main_replace(parsed_args["filetorename"], parsed_args["out"])
+		println("No FASTA file")
+		if !isnothing(parsed_args["ColumnNr"])
+			println("Column Known:" , Int8(parsed_args["ColumnNr"]))
+			replaceKnowncolumn(parsed_args["filetorename"], parsed_args["out"], Int8(parsed_args["ColumnNr"]))
+		else
+			println("Column Unknown!")
+			main_replace(parsed_args["filetorename"], parsed_args["out"] )
+		end
 	end
 	println("Done!!!")
 end
