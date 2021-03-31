@@ -34,6 +34,7 @@ function parse_commandline()
 	   "--ColumnNr"
 			  help = "If know, put column to replace, from tab separated file. Will make it faster."
 			  required = false
+			  arg_type = Int
 
 	     "--out","-o"
 	          help = "Output file"
@@ -130,13 +131,15 @@ end
 
 
 ####### Read and write
-function main_replaceKnowncolumn(filein, fileout, ColumnNr)
+function main_replaceKnowncolumn(filein, fileout, ColumnNr )
 	i=1
 	open(fileout, "w") do fileout
 		open(filein) do file
 		    for line in eachline(file)
 				global newline=line
-				if occursin("Contig", split(line,"\t", limit=ColumnNr)[ColumnNr])
+				SPlitline=split(line,"\t", limit=ColumnNr+1)[ColumnNr]
+				println("Column item to look for replacement: ",SPlitline)
+				if occursin("Contig", SPlitline)
 					println("Found :: ",line)
 					for contig in keys(Names_dictionary)
 					      #println("Check contig ... ", contig )
@@ -179,11 +182,11 @@ function main()
 	else
 		println("No FASTA file")
 		if !isnothing(parsed_args["ColumnNr"])
-			println("Column Known:" ,parsed_args["ColumnNr"])
-			main_replaceKnowncolumn(parsed_args["filetorename"], parsed_args["out"])
+			println("Column Known:" , Int8(parsed_args["ColumnNr"]))
+			main_replaceKnowncolumn(parsed_args["filetorename"], parsed_args["out"], Int8(parsed_args["ColumnNr"]))
 		else
 			println("Column Unknown!")
-			main_replace(parsed_args["filetorename"], parsed_args["out"],Int8(parsed_args["ColumnNr"]) )
+			main_replace(parsed_args["filetorename"], parsed_args["out"] )
 		end
 	end
 	println("Done!!!")
